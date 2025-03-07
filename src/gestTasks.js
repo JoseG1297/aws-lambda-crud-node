@@ -12,7 +12,7 @@ exports.getTasks = async (event) => {
 
         return {
           statusCode: 200,
-          body: JSON.stringify({ message: 'Tareas obtenidas correctamente', data: tasks }),
+          body: JSON.stringify({ message: 'Tareas obtenidas correctamente', data: tasks?.Items }),
         };
       } catch (error) {
         return {
