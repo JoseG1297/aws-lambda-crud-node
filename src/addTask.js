@@ -1,11 +1,14 @@
 const {v4} = require('uuid');
 const AWS = require('aws-sdk');
 
-exports.addTask = async (event) => {
+const middy = require('@middy/core');
+const jsonBodyParser = require('@middy/http-json-body-parser');
+
+const addTask = async (event) => {
 
     const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
-    const { title, description } = JSON.parse(event.body); // Aquí se corrige el error
+    const { title, description } = event.body;
     const createdAt = new Date();
     const id = v4();
 
@@ -13,7 +16,7 @@ exports.addTask = async (event) => {
         id: id,
         title: title,
         description: description,
-        createdAt: createdAt
+        createdAt: createdAt.toUTCString()
     };
     
 
@@ -36,3 +39,7 @@ exports.addTask = async (event) => {
     }
 };
   
+
+
+// Envuelve la función con Middy y usa el middleware jsonBodyParser
+module.exports.addTask = middy(addTask).use(jsonBodyParser());

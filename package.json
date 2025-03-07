@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@middy/core": "^6.1.5",
     "aws-sdk": "^2.1692.0",
     "uuid": "^11.1.0"
   }
