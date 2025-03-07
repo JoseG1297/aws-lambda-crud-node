@@ -5,15 +5,15 @@ exports.addTask = async (event) => {
 
     const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
-    const { title, description} = event.body;
-    const creatdAt = new Date();
+    const { title, description } = JSON.parse(event.body); // Aquí se corrige el error
+    const createdAt = new Date();
     const id = v4();
 
     const task = {
         id: id,
         title: title,
         description: description,
-        creatdAt
+        createdAt: createdAt
     };
     
 
@@ -23,7 +23,7 @@ exports.addTask = async (event) => {
     };
 
     try {
-        await dynamoDb.put(params).promise();
+        await dynamoDB.put(params).promise();
         return {
             statusCode: 200,
             body: JSON.stringify({ message: 'Tarea guardada correctamente', data: task }),
@@ -31,7 +31,7 @@ exports.addTask = async (event) => {
         } catch (error) {
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Error al guardar la tarea en DynamoDB' }),
+            body: JSON.stringify({ error: 'Error al guardar la tarea en DynamoDB', msg: error.message }),
         };
     }
 };
