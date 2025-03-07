@@ -5,13 +5,20 @@ exports.getTasks = async (event) => {
     const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
 
-    const tasks = await dynamoDB.scan({
-        TableName: 'taskTable'
-    }).promise();
+    try {
+        const tasks = await dynamoDB.scan({
+            TableName: 'taskTable'
+        }).promise();
 
-    return {
-        statusCode: 200,
-        body: JSON.stringify(tasks)
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ message: 'Tareas obtenidas correctamente', data: tasks }),
+        };
+      } catch (error) {
+        return {
+          statusCode: 500,
+          body: JSON.stringify({ error: 'Error al obtener la tarea en DynamoDB', msg: error }),
+        };
     }
 };
   

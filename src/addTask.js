@@ -9,21 +9,30 @@ exports.addTask = async (event) => {
     const creatdAt = new Date();
     const id = v4();
 
-    const newTask ={
-        id,
-        title,
-        description,
+    const task = {
+        id: id,
+        title: title,
+        description: description,
         creatdAt
-    }
+    };
+    
 
-    await dynamoDB.put({
+    const params = {
         TableName: 'taskTable',
-        Item: newTask
-    }).promise()
+        Item: task
+    };
 
-    return {
-        statusCode: 200,
-        body: JSON.stringify(newTask)
+    try {
+        await dynamoDb.put(params).promise();
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ message: 'Tarea guardada correctamente', data: task }),
+        };
+        } catch (error) {
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: 'Error al guardar la tarea en DynamoDB' }),
+        };
     }
 };
   
